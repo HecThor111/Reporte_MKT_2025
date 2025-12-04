@@ -14,7 +14,102 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("📊 HubSpot – Marketing → Negocios posteriores (2025)")
+# -------------------------
+# THEME / ESTILO FUTURISTA
+# -------------------------
+SPACE_BG = "#050816"
+SPACE_PANEL = "#0b1020"
+SPACE_PANEL_SOFT = "#111827"
+NEON_CYAN = "#22d3ee"
+NEON_BLUE = "#38bdf8"
+NEON_PURPLE = "#a855f7"
+NEON_GREEN = "#22c55e"
+NEON_PINK = "#ec4899"
+TEXT_MAIN = "#e5e7eb"
+TEXT_MUTED = "#9ca3af"
+
+SPACE_PALETTE = [NEON_CYAN, NEON_PURPLE, NEON_GREEN, NEON_BLUE, NEON_PINK, "#eab308"]
+
+st.markdown(
+    f"""
+    <style>
+    /* Fondo general */
+    [data-testid="stAppViewContainer"] {{
+        background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%),
+                    radial-gradient(circle at bottom right, rgba(168,85,247,0.18), transparent 55%),
+                    {SPACE_BG};
+        color: {TEXT_MAIN};
+    }}
+
+    [data-testid="stHeader"] {{
+        background: linear-gradient(90deg, rgba(15,23,42,0.95), rgba(15,23,42,0.75));
+        border-bottom: 1px solid rgba(148,163,184,0.15);
+    }}
+
+    [data-testid="stSidebar"] > div:first-child {{
+        background: linear-gradient(180deg, #020617, #020617);
+        border-right: 1px solid rgba(148,163,184,0.25);
+    }}
+
+    h1, h2, h3, h4, h5, h6 {{
+        color: {TEXT_MAIN} !important;
+        letter-spacing: 0.03em;
+    }}
+
+    .metric-label {{
+        font-size: 0.85rem;
+        color: {TEXT_MUTED};
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.15rem;
+    }}
+
+    .metric-value {{
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: {NEON_CYAN};
+    }}
+
+    .metric-card {{
+        background: radial-gradient(circle at top left, rgba(34,211,238,0.07), transparent 55%),
+                    {SPACE_PANEL};
+        border-radius: 1rem;
+        padding: 0.9rem 1rem;
+        border: 1px solid rgba(148,163,184,0.25);
+        box-shadow: 0 18px 45px rgba(15,23,42,0.75);
+    }}
+
+    .section-divider {{
+        border-top: 1px solid rgba(148,163,184,0.25);
+        margin: 2rem 0 1.2rem 0;
+    }}
+
+    /* Tablas */
+    .stDataFrame {{ color: {TEXT_MAIN}; }}
+
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    f"""
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.2rem;">
+        <span style="font-size:1.9rem;">📡</span>
+        <div>
+            <div style="font-size:2rem;font-weight:800;
+                        background:linear-gradient(90deg,{NEON_CYAN},{NEON_PURPLE});
+                        -webkit-background-clip:text;color:transparent;">
+                HubSpot – Marketing → Negocios posteriores (2025)
+            </div>
+            <div style="font-size:0.9rem;color:{TEXT_MUTED};">
+                Mapeo espacial del viaje de los deals: desde iNBest.marketing hacia los pipelines comerciales.
+            </div>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 st.caption("Origen de datos: hubspot_marketing_y_posteriores_2025_clean.csv")
 
 # -------------------------
@@ -176,17 +271,55 @@ total_origen_amount = df_origen_f["origen_amount"].sum()
 total_post_amount = df_post_f_unique["deal_amount"].sum()
 
 deals_post_por_origen = num_post_unicos / num_origen if num_origen > 0 else 0
-ticket_prom_origen = total_origen_amount / num_origen if num_origen > 0 else 0
-ticket_prom_post = total_post_amount / num_post_unicos if num_post_unicos > 0 else 0
 
-col1.metric("Negocios de marketing (origen)", f"{num_origen:,}")
-col2.metric("Negocios posteriores únicos", f"{num_post_unicos:,}")
-col3.metric("Monto total posterior (único)", f"${total_post_amount:,.2f}")
-col4.metric("Deals posteriores por negocio origen", f"{deals_post_por_origen:.2f}")
+with col1:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">Negocios de marketing (origen)</div>
+            <div class="metric-value">{num_origen:,}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with col2:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">Negocios posteriores únicos</div>
+            <div class="metric-value">{num_post_unicos:,}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with col3:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">Monto total posterior (único)</div>
+            <div class="metric-value">${total_post_amount:,.0f}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with col4:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">Deals posteriores por negocio origen</div>
+            <div class="metric-value">{deals_post_por_origen:.2f}x</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # -------------------------
 # MÉTRICAS AVANZADAS (fila 2)
 # -------------------------
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 st.markdown("### 🧠 Métricas avanzadas")
 
 col5, col6, col7, col8 = st.columns(4)
@@ -216,31 +349,41 @@ ganados = estado_counts.loc[
 win_rate = (ganados / num_post_unicos * 100) if num_post_unicos > 0 else 0
 
 # Tiempo medio marketing → primer negocio posterior
-# (para los que sí tuvieron posterior)
 primer_posterior = (
     df_post_f.groupby("origen_deal_id")["deal_created_date"]
     .min()
     .reset_index(name="fecha_primer_posterior")
 )
-tmp = df_origen_f.merge(primer_posterior, on="origen_deal_id", how="inner")
-tmp["dias_a_primer_posterior"] = (
-    tmp["fecha_primer_posterior"] - tmp["origen_created_date"]
+tmp_time = df_origen_f.merge(primer_posterior, on="origen_deal_id", how="inner")
+tmp_time["dias_a_primer_posterior"] = (
+    tmp_time["fecha_primer_posterior"] - tmp_time["origen_created_date"]
 ).dt.days
-dias_prom = tmp["dias_a_primer_posterior"].mean() if not tmp.empty else np.nan
+dias_prom = tmp_time["dias_a_primer_posterior"].mean() if not tmp_time.empty else np.nan
 
-col5.metric("Origen con ≥1 negocio posterior", f"{num_origen_con_post:,}")
-col6.metric("Tasa de conversión marketing → posterior", f"{conversion_rate:.1f}%")
-col7.metric("Factor de multiplicación (posterior / origen)", f"{roi_factor:.2f}x")
-col8.metric(
-    "Días promedio a primer posterior",
-    f"{dias_prom:.1f} días" if not np.isnan(dias_prom) else "N/A",
-)
-
-st.markdown("---")
+for col, label, value in [
+    (col5, "Origen con ≥1 negocio posterior", f"{num_origen_con_post:,}"),
+    (col6, "Tasa de conversión marketing → posterior", f"{conversion_rate:.1f}%"),
+    (col7, "Factor de multiplicación (posterior / origen)", f"{roi_factor:.2f}x"),
+    (
+        col8,
+        "Días promedio a primer posterior",
+        f"{dias_prom:.1f} días" if not np.isnan(dias_prom) else "N/A",
+    ),
+]:
+    col.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-label">{label}</div>
+            <div class="metric-value">{value}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # -------------------------
 # DISTRIBUCIÓN DE ESTADOS
 # -------------------------
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 st.markdown("### 🧩 Distribución de estados comerciales y de marketing")
 col_est1, col_est2 = st.columns(2)
 
@@ -256,9 +399,16 @@ with col_est1:
             estado_counts_amt,
             names="estado_comercial",
             values="deal_amount",
-            hole=0.4,
+            hole=0.45,
+            color_discrete_sequence=SPACE_PALETTE,
         )
-        fig_estado.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+        fig_estado.update_layout(
+            template="plotly_dark",
+            margin=dict(l=0, r=0, t=30, b=0),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font_color=TEXT_MAIN,
+        )
         st.plotly_chart(fig_estado, use_container_width=True)
     else:
         st.info("No hay negocios posteriores con los filtros actuales.")
@@ -277,32 +427,36 @@ with col_est2:
             y="num_deals",
             color="estado_marketing",
             barmode="stack",
+            color_discrete_sequence=SPACE_PALETTE,
         )
         fig_mkt.update_layout(
+            template="plotly_dark",
             xaxis_title="Pipeline de marketing",
             yaxis_title="Núm. negocios",
             margin=dict(l=10, r=10, t=30, b=80),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font_color=TEXT_MAIN,
         )
         st.plotly_chart(fig_mkt, use_container_width=True)
     else:
         st.info("No hay negocios de origen con los filtros actuales.")
 
-st.markdown("---")
-
 # -------------------------
 # EVOLUCIÓN TEMPORAL
 # -------------------------
-st.markdown("### 📆 Evolución temporal")
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+st.markmarkdown("### 📆 Evolución temporal")
 
 col_time1, col_time2 = st.columns(2)
 
 with col_time1:
     st.markdown("**Negocios de marketing por mes (cantidad y monto)**")
     if not df_origen_f.empty:
-        tmp = df_origen_f.copy()
-        tmp["mes"] = tmp["origen_created_date"].dt.to_period("M").dt.to_timestamp()
-        evo = (
-            tmp.groupby("mes")
+        tmp_o = df_origen_f.copy()
+        tmp_o["mes"] = tmp_o["origen_created_date"].dt.to_period("M").dt.to_timestamp()
+        evo_o = (
+            tmp_o.groupby("mes")
             .agg(
                 num_negocios=("origen_deal_id", "nunique"),
                 monto_origen=("origen_amount", "sum"),
@@ -310,15 +464,20 @@ with col_time1:
             .reset_index()
         )
         fig_evo = px.bar(
-            evo,
+            evo_o,
             x="mes",
             y="num_negocios",
             hover_data=["monto_origen"],
+            color_discrete_sequence=[NEON_CYAN],
         )
         fig_evo.update_layout(
+            template="plotly_dark",
             xaxis_title="Mes",
             yaxis_title="Negocios de marketing",
             margin=dict(l=10, r=10, t=30, b=40),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font_color=TEXT_MAIN,
         )
         st.plotly_chart(fig_evo, use_container_width=True)
     else:
@@ -327,10 +486,10 @@ with col_time1:
 with col_time2:
     st.markdown("**Negocios posteriores por mes (cantidad y monto)**")
     if not df_post_f_unique.empty:
-        tmp = df_post_f_unique.copy()
-        tmp["mes"] = tmp["deal_created_date"].dt.to_period("M").dt.to_timestamp()
-        evo = (
-            tmp.groupby("mes")
+        tmp_p = df_post_f_unique.copy()
+        tmp_p["mes"] = tmp_p["deal_created_date"].dt.to_period("M").dt.to_timestamp()
+        evo_p = (
+            tmp_p.groupby("mes")
             .agg(
                 num_negocios=("deal_id", "nunique"),
                 monto_posterior=("deal_amount", "sum"),
@@ -338,25 +497,29 @@ with col_time2:
             .reset_index()
         )
         fig_evo2 = px.bar(
-            evo,
+            evo_p,
             x="mes",
             y="num_negocios",
             hover_data=["monto_posterior"],
+            color_discrete_sequence=[NEON_PURPLE],
         )
         fig_evo2.update_layout(
+            template="plotly_dark",
             xaxis_title="Mes",
             yaxis_title="Negocios posteriores",
             margin=dict(l=10, r=10, t=30, b=40),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font_color=TEXT_MAIN,
         )
         st.plotly_chart(fig_evo2, use_container_width=True)
     else:
         st.info("No hay negocios posteriores con los filtros actuales.")
 
-st.markdown("---")
-
 # -------------------------
 # TABLA RESUMEN POR NEGOCIO ORIGEN
 # -------------------------
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 st.subheader("📌 Resumen por negocio de marketing")
 
 # Info base del negocio origen (1 fila por origen_deal_id)
@@ -382,7 +545,7 @@ base_origen = (
     ]
 )
 
-# Agregados de posteriores por negocio origen
+# Agregados de posteriores por negocio origen (con df_post_f, pero agregando por origen_deal_id)
 agg_post_count = (
     df_post_f.groupby("origen_deal_id")["deal_id"]
     .nunique()
@@ -408,11 +571,10 @@ st.dataframe(
     hide_index=True,
 )
 
-st.markdown("---")
-
 # -------------------------
 # SECCIÓN INSIGHTS VISUALES (barras)
 # -------------------------
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 st.subheader("📈 Insights visuales")
 
 col_g1, col_g2 = st.columns(2)
@@ -431,11 +593,16 @@ with col_g1:
             monto_por_owner,
             x="deal_owner_name",
             y="deal_amount",
+            color_discrete_sequence=[NEON_GREEN],
         )
         fig_owner.update_layout(
+            template="plotly_dark",
             xaxis_title="Owner comercial",
             yaxis_title="Monto posterior",
             margin=dict(l=10, r=10, t=30, b=80),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font_color=TEXT_MAIN,
         )
         st.plotly_chart(fig_owner, use_container_width=True)
     else:
@@ -443,7 +610,7 @@ with col_g1:
 
 # 2) Cantidad de deals posteriores por pipeline comercial
 with col_g2:
-    st.markdown("**Cantidad de negocios posteriores por pipeline comercial**")
+    st.markdown("**Cantidad de negocios posteriores por pipeline comercial (deals únicos)**")
     if not df_post_f_unique.empty:
         deals_por_pipeline = (
             df_post_f_unique.groupby("pipeline_comercial")["deal_id"]
@@ -457,38 +624,37 @@ with col_g2:
             deals_por_pipeline,
             x="pipeline_comercial",
             y="num_deals",
+            color_discrete_sequence=[NEON_BLUE],
         )
         fig_pipe.update_layout(
+            template="plotly_dark",
             xaxis_title="Pipeline comercial",
             yaxis_title="Núm. negocios",
             margin=dict(l=10, r=10, t=30, b=80),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font_color=TEXT_MAIN,
         )
         st.plotly_chart(fig_pipe, use_container_width=True)
     else:
         st.info("No hay negocios posteriores con los filtros actuales.")
 
-st.markdown("---")
-
 # -------------------------
 # SANKEY: FLUJO MARKETING → PIPELINES COMERCIALES
 # -------------------------
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 st.subheader("🔀 Flujo de negocio: Marketing → Pipelines comerciales (Sankey)")
 
 if df_post_f.empty:
     st.info("No hay negocios posteriores para construir el diagrama de flujo con los filtros actuales.")
 else:
     st.markdown("Ajustes del diagrama:")
-    col_s1, col_s2 = st.columns(2)
+    col_s1, _ = st.columns(2)
     with col_s1:
         metrica_flujo = st.radio(
             "Métrica para el ancho del flujo",
             ("Monto posterior atribuido", "Número de negocios posteriores (atribuidos)"),
             horizontal=True,
-        )
-    with col_s2:
-        solo_mkt = st.checkbox(
-            "Mostrar solo negocios cuyo pipeline de origen es iNBest.marketing",
-            value=False,
         )
 
     # 🔎 BASE DEL SANKEY: UNA FILA POR (origen_deal_id, deal_id)
@@ -498,14 +664,12 @@ else:
         .copy()
     )
 
-    # Filtrar solo origen en iNBest.marketing si el usuario lo pide
-    if solo_mkt:
-        sankey_base = sankey_base[sankey_base["pipeline_marketing"] == "iNBest.marketing"]
+    # SOLO negocios cuyo pipeline de origen es iNBest.marketing
+    sankey_base = sankey_base[sankey_base["pipeline_marketing"] == "iNBest.marketing"]
 
     if sankey_base.empty:
-        st.info("No hay datos suficientes para el Sankey con los filtros seleccionados.")
+        st.info("No hay datos suficientes para el Sankey con los filtros seleccionados (y origen iNBest.marketing).")
     else:
-        # Etiquetas de origen y destino
         sankey_base["pipeline_origen_label"] = sankey_base["pipeline_marketing"]
         sankey_base["pipeline_comercial_label"] = sankey_base["pipeline_comercial"]
 
@@ -531,45 +695,55 @@ else:
             origen_labels = sankey_group["pipeline_origen_label"].unique().tolist()
             destino_labels = sankey_group["pipeline_comercial_label"].unique().tolist()
 
-            # Creamos índices separados para origen y destino para evitar source == target
+            # Índices separados para evitar source == target
             origen_index = {label: i for i, label in enumerate(origen_labels)}
-            destino_index = {label: i + len(origen_labels) for i, label in enumerate(destino_labels)}
+            destino_index = {
+                label: i + len(origen_labels) for i, label in enumerate(destino_labels)
+            }
 
             labels = origen_labels + destino_labels
 
             sources = sankey_group["pipeline_origen_label"].map(origen_index).values
             targets = sankey_group["pipeline_comercial_label"].map(destino_index).values
 
-            # Colores: azul para marketing, verde para comercial
             n_origen = len(origen_labels)
             n_destino = len(destino_labels)
-            colors = (
-                ["rgba(33, 150, 243, 0.8)"] * n_origen  # marketing (origen)
-                + ["rgba(76, 175, 80, 0.8)"] * n_destino  # comercial (destino)
+
+            node_colors = (
+                [NEON_BLUE] * n_origen
+                + [NEON_GREEN] * n_destino
             )
+
+            link_color = "rgba(56,189,248,0.4)" if metrica_flujo == "Monto posterior atribuido" else "rgba(168,85,247,0.45)"
 
             fig = go.Figure(
                 data=[
                     go.Sankey(
+                        arrangement="snap",
                         node=dict(
-                            pad=20,
-                            thickness=20,
-                            line=dict(width=0.5),
+                            pad=24,
+                            thickness=22,
+                            line=dict(width=1, color="rgba(148,163,184,0.6)"),
                             label=labels,
-                            color=colors,
+                            color=node_colors,
                         ),
                         link=dict(
                             source=sources,
                             target=targets,
                             value=values,
+                            color=[link_color] * len(values),
                         ),
                     )
                 ]
             )
 
             fig.update_layout(
-                height=500,
+                template="plotly_dark",
+                height=520,
                 margin=dict(l=10, r=10, t=10, b=10),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                font_color=TEXT_MAIN,
             )
 
             st.plotly_chart(fig, use_container_width=True)
@@ -578,31 +752,30 @@ else:
                 """
                 **Cómo leer el gráfico:**
 
-                - Cada bloque del lado izquierdo es el *pipeline de origen* (normalmente marketing u otros pipelines donde nace el negocio).
-                - Cada bloque del lado derecho es el *pipeline comercial* donde termina el negocio posterior.
-                - El grosor de la cinta representa la métrica seleccionada:
+                - El bloque de la izquierda es el *pipeline de origen* (iNBest.marketing).
+                - Los bloques de la derecha son los *pipelines comerciales* donde aterrizan los negocios posteriores.
+                - El grosor de cada flujo representa la métrica seleccionada:
                   - **Monto posterior atribuido**: suma del `deal_amount` de los negocios posteriores.
                   - **Número de negocios posteriores (atribuidos)**: cantidad de deals posteriores distintos.
-                - Marcando **"Mostrar solo negocios cuyo pipeline de origen es iNBest.marketing"** ves únicamente cómo fluye lo que nace en marketing.
                 """
             )
-
-st.markdown("---")
 
 # -------------------------
 # TABLAS ADICIONALES DE PIPELINES / ETAPAS
 # -------------------------
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 st.subheader("📊 Desglose por pipeline y etapa comercial")
 
-if df_post_f.empty:
+# 👉 Usamos deals únicos posteriores para evitar duplicar montos
+if df_post_f_unique.empty:
     st.info("No hay datos posteriores con los filtros actuales.")
 else:
     col_t1, col_t2 = st.columns(2)
 
     with col_t1:
-        st.markdown("**Top pipelines comerciales por monto posterior**")
+        st.markdown("**Top pipelines comerciales por monto posterior (deals únicos)**")
         top_pipelines = (
-            df_post_f.groupby("pipeline_comercial")
+            df_post_f_unique.groupby("pipeline_comercial")
             .agg(
                 num_deals=("deal_id", "nunique"),
                 monto_total=("deal_amount", "sum"),
@@ -618,14 +791,14 @@ else:
         )
 
     with col_t2:
-        st.markdown("**Detalle de etapas dentro de un pipeline comercial**")
-        pipelines_disp = sorted(df_post_f["pipeline_comercial"].unique())
+        st.markdown("**Detalle de etapas dentro de un pipeline comercial (deals únicos)**")
+        pipelines_disp = sorted(df_post_f_unique["pipeline_comercial"].unique())
         pipeline_sel = st.selectbox(
             "Selecciona pipeline comercial",
             options=pipelines_disp,
         )
 
-        df_etapas = df_post_f[df_post_f["pipeline_comercial"] == pipeline_sel]
+        df_etapas = df_post_f_unique[df_post_f_unique["pipeline_comercial"] == pipeline_sel]
 
         etapas = (
             df_etapas.groupby("etapa_comercial")
@@ -642,3 +815,5 @@ else:
             use_container_width=True,
             hide_index=True,
         )
+
+
