@@ -100,10 +100,7 @@ st.markdown(
             <div style="font-size:2rem;font-weight:800;
                         background:linear-gradient(90deg,{NEON_CYAN},{NEON_PURPLE});
                         -webkit-background-clip:text;color:transparent;">
-                HubSpot – Marketing → Negocios posteriores (2025)
-            </div>
-            <div style="font-size:0.9rem;color:{TEXT_MUTED};">
-                Mapeo espacial del viaje de los deals: desde iNBest.marketing hacia los pipelines comerciales.
+                Reporte de Leads de Marketing 2025
             </div>
         </div>
     </div>
@@ -446,7 +443,7 @@ with col_est2:
 # EVOLUCIÓN TEMPORAL
 # -------------------------
 st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-st.markmarkdown("### 📆 Evolución temporal")
+st.markdown("### 📆 Evolución temporal")
 
 col_time1, col_time2 = st.columns(2)
 
@@ -482,39 +479,6 @@ with col_time1:
         st.plotly_chart(fig_evo, use_container_width=True)
     else:
         st.info("No hay negocios de marketing con los filtros actuales.")
-
-with col_time2:
-    st.markdown("**Negocios posteriores por mes (cantidad y monto)**")
-    if not df_post_f_unique.empty:
-        tmp_p = df_post_f_unique.copy()
-        tmp_p["mes"] = tmp_p["deal_created_date"].dt.to_period("M").dt.to_timestamp()
-        evo_p = (
-            tmp_p.groupby("mes")
-            .agg(
-                num_negocios=("deal_id", "nunique"),
-                monto_posterior=("deal_amount", "sum"),
-            )
-            .reset_index()
-        )
-        fig_evo2 = px.bar(
-            evo_p,
-            x="mes",
-            y="num_negocios",
-            hover_data=["monto_posterior"],
-            color_discrete_sequence=[NEON_PURPLE],
-        )
-        fig_evo2.update_layout(
-            template="plotly_dark",
-            xaxis_title="Mes",
-            yaxis_title="Negocios posteriores",
-            margin=dict(l=10, r=10, t=30, b=40),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font_color=TEXT_MAIN,
-        )
-        st.plotly_chart(fig_evo2, use_container_width=True)
-    else:
-        st.info("No hay negocios posteriores con los filtros actuales.")
 
 # -------------------------
 # TABLA RESUMEN POR NEGOCIO ORIGEN
@@ -815,5 +779,6 @@ else:
             use_container_width=True,
             hide_index=True,
         )
+
 
 
